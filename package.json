@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "description": "https://github.com/mui/toolpad/blob/v0.16.0/docs/data/toolpad/core/components/dashboard-layout/DashboardLayoutBasic.tsx",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "latest",
+    "@mui/material": "latest",
+    "@mui/icons-material": "latest",
+    "@toolpad/core": "latest",
+    "react-dom": "latest",
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "invariant": "latest",
+    "typescript": "latest"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@types/invariant": "latest"
+  }
+}
