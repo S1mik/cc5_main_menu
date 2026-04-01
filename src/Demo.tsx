@@ -1,19 +1,23 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
+import CenterFocusWeakIcon from '@mui/icons-material/CenterFocusWeak';
+import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import AppShortcutOutlinedIcon from '@mui/icons-material/AppShortcutOutlined';
 import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
 import { useActivePage } from '@toolpad/core/useActivePage';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { DemoProvider, useDemoRouter } from '@toolpad/core/internal';
 
+
 const NAVIGATION: Navigation = [
   {
     kind: 'header',
-    title: 'Администрирование торговой сети',
+    title: 'Администрирование',
   },
   {
     segment: 'network-architecture',
@@ -68,15 +72,15 @@ const NAVIGATION: Navigation = [
     icon: <LayersIcon />,
     children: [
       {
-        segment: 'configurations',
-        title: 'Конфигурации',
-        icon: <DescriptionIcon />,
-      },
-      {
         segment: 'configuration-labels',
         title: 'Конфигурационные метки',
         icon: <DescriptionIcon />,
       },
+      {
+        segment: 'configurations',
+        title: 'Конфигурации',
+        icon: <DescriptionIcon />,
+      },      
     ],
   },
   {
@@ -93,6 +97,135 @@ const NAVIGATION: Navigation = [
         segment: 'dictionaries-export-audit',
         title: 'Аудит выгрузки справочников',
         icon: <DescriptionIcon />,
+        children: [
+          {
+            segment: 'dictionaries-export-active-tasks',
+            title: 'Активные задачи',
+            icon: <DescriptionIcon />,
+          },
+          {
+            segment: 'dictionaries-export-queued-tasks',
+            title: 'Задачи в очереди',
+            icon: <DescriptionIcon />,
+          },
+          {
+            segment: 'dictionaries-export-queued-tasks-level-1',
+            title: 'Задачи в очереди 1-го уровня',
+            icon: <DescriptionIcon />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    kind: 'divider',
+  },
+  {
+    kind: 'header',
+    title: 'Управление магазином',
+  },
+  {
+    segment: 'mark',
+    title: 'Маркировка',
+    icon: <CenterFocusWeakIcon />,
+  },
+  {
+    segment: 'goods-stocks',
+    title: 'Остатки товаров по магазинам',
+    icon: <LocalShippingOutlinedIcon />,
+  },
+
+  {
+    segment: 'operday',
+    title: 'Операционный день',
+    icon: <LayersIcon />,
+    children: [
+      {
+        segment: 'operday-journal',
+        title: 'Журнал операционных дней',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'shifts-journal',
+        title: 'Журнал смен',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'operations-journal',
+        title: 'Журнал операций',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'encashment',
+        title: 'Инкассация',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'cashbook',
+    title: 'Главная касса',
+    icon: <LayersIcon />,
+    children: [
+      {
+        segment: 'cash-register-book',
+        title: 'Кассовая книга',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'ko-document-templates',
+        title: 'Шаблоны документов КО',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'Orders',
+    title: 'Заказы',
+    icon: <AppShortcutOutlinedIcon />,
+    children: [
+      {
+        segment: 'soft-checks',
+        title: 'Софт чеки',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'online-checks',
+        title: 'Онлайн чеки',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'find',
+    title: 'Поиск чеков',
+    icon: <SearchOutlinedIcon />,
+  },
+
+  {
+    segment: 'monitoring',
+    title: 'Мониторинг касс',
+    icon: <LayersIcon />,
+  },
+  {
+    segment: 'Audit',
+    title: 'Аудит',
+    icon: <LocalPoliceOutlinedIcon />,
+    children: [
+      {
+        segment: 'pendig',
+        title: 'Отложенные чеки',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'storno',
+        title: 'Удаленные товары и чеки',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'cashierlog',
+        title: 'Журнал действий кассира',
+        icon: <DescriptionIcon />,
       },
     ],
   },
@@ -105,12 +238,12 @@ const NAVIGATION: Navigation = [
   },
   {
     segment: 'shop-settings',
-    title: 'Настройки магазина',
+    title: 'Магазин',
     icon: <LayersIcon />,
     children: [
       {
         segment: 'store-groups',
-        title: 'Группы магазинов',
+        title: 'Структурные метки',
         icon: <DescriptionIcon />,
       },
       {
@@ -137,17 +270,17 @@ const NAVIGATION: Navigation = [
   },
   {
     segment: 'exchange-settings',
-    title: 'Настройка обмена',
+    title: 'Обмен',
     icon: <LayersIcon />,
     children: [
       {
         segment: 'exchange-schedules',
-        title: 'Настройки расписаний',
+        title: 'Расписание',
         icon: <DescriptionIcon />,
       },
       {
         segment: 'exchange-dictionaries-export',
-        title: 'Настройки выгрузки справочников',
+        title: 'Выгрузка справочников',
         icon: <DescriptionIcon />,
       },
       {
@@ -189,24 +322,9 @@ const NAVIGATION: Navigation = [
   },
   {
     segment: 'equipment-settings',
-    title: 'Настройки оборудования',
+    title: 'Оборудование',
     icon: <LayersIcon />,
     children: [
-      {
-        segment: 'equipment-puppet',
-        title: 'Puppet',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'equipment-vnc',
-        title: 'VNC',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'equipment-ssh',
-        title: 'SSH',
-        icon: <DescriptionIcon />,
-      },
       {
         segment: 'equipment-vpos-clusters',
         title: 'Кластеры VPOS',
@@ -230,6 +348,50 @@ const NAVIGATION: Navigation = [
       {
         segment: 'equipment-price-printers',
         title: 'Прайспринтеры',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'cash-register-settings',
+    title: 'Кассы',
+    icon: <LayersIcon />,
+    children: [
+      {
+        segment: 'equipment-vnc',
+        title: 'VNC',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'equipment-ssh',
+        title: 'SSH',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'integrations',
+    title: 'Интеграции',
+    icon: <LayersIcon />,
+    children: [
+      {
+        segment: 'equipment-puppet',
+        title: 'Puppet',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'artix-loyalty-sms',
+        title: 'СМС',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'artix-loyalty-telegram-bot',
+        title: 'Telegram-bot',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'artix-loyalty-cardsmobile',
+        title: 'Cardsmobile',
         icon: <DescriptionIcon />,
       },
     ],
@@ -286,21 +448,6 @@ const NAVIGATION: Navigation = [
         title: 'Метки дисконта',
         icon: <DescriptionIcon />,
       },
-      {
-        segment: 'artix-loyalty-sms',
-        title: 'СМС',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'artix-loyalty-telegram-bot',
-        title: 'Telegram-bot',
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: 'artix-loyalty-cardsmobile',
-        title: 'Cardsmobile',
-        icon: <DescriptionIcon />,
-      },
     ],
   },
   {
@@ -308,179 +455,127 @@ const NAVIGATION: Navigation = [
   },
   {
     kind: 'header',
-    title: 'Управление магазином',
+    title: 'Отчеты',
   },
   {
-    segment: 'operday',
-    title: 'Операционный день',
-    icon: <LayersIcon />,
-  },
-  {
-    segment: 'cashbook',
-    title: 'Главная касса',
-    icon: <LayersIcon />,
-  },
-  {
-    segment: 'find',
-    title: 'Поиск чеков',
-    icon: <LayersIcon />,
-  },
-  {
-    segment: 'monitoring',
-    title: 'Мониторинг касс',
-    icon: <LayersIcon />,
-  },
-  {
-    segment: 'Audit',
-    title: 'Аудит',
+    segment: 'cashier-discipline-and-efficiency',
+    title: 'Кассовая дисциплина',
     icon: <DescriptionIcon />,
     children: [
       {
-        segment: 'pendig',
-        title: 'Отложенные чеки',
+        segment: 'cashier-speed',
+        title: 'Скорость работы кассиров',
         icon: <DescriptionIcon />,
       },
       {
-        segment: 'storno',
-        title: 'Удаленные товары и чеки',
+        segment: 'cashiers-report',
+        title: 'Отчет по кассирам',
         icon: <DescriptionIcon />,
       },
       {
-        segment: 'cashierlog',
-        title: 'Журнал действий кассира',
+        segment: 'sales-by-cashiers',
+        title: 'Продажи по кассирам',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'returns-by-cashiers',
+        title: 'Возвраты по кассирам',
         icon: <DescriptionIcon />,
       },
     ],
   },
   {
-    kind: 'divider',
-  },
-  {
-    segment: 'reports',
-    title: 'Отчеты',
+    segment: 'sales-revenue-and-returns',
+    title: 'Продажи и возвраты',
     icon: <DescriptionIcon />,
     children: [
       {
-        segment: 'cashier-discipline-and-efficiency',
-        title: 'Кассовая дисциплина',
+        segment: 'cash-flow',
+        title: 'Движение денежных средств',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'cashier-speed',
-            title: 'Скорость работы кассиров',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'cashiers-report',
-            title: 'Отчет по кассирам',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'sales-by-cashiers',
-            title: 'Продажи по кассирам',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'returns-by-cashiers',
-            title: 'Возвраты по кассирам',
-            icon: <DescriptionIcon />,
-          },
-        ],
       },
       {
-        segment: 'sales-revenue-and-returns',
+        segment: 'sales-and-returns',
         title: 'Продажи и возвраты',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'cash-flow',
-            title: 'Движение денежных средств',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'sales-and-returns',
-            title: 'Продажи и возвраты',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'receipt-amounts',
-            title: 'Суммы чеков',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'daily-sales-by-hour',
-            title: 'Продажи за день по часам',
-            icon: <DescriptionIcon />,
-          },
-        ],
       },
       {
-        segment: 'load-and-queues-analysis',
-        title: 'Анализ загрузки',
+        segment: 'receipt-amounts',
+        title: 'Суммы чеков',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'cash-register-load-by-hour',
-            title: 'Загрузка касс по часам',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'checkout-queues',
-            title: 'Очереди на кассах',
-            icon: <DescriptionIcon />,
-          },
-        ],
       },
       {
-        segment: 'product-losses-and-errors-control',
-        title: 'Потери и контроль ошибок',
+        segment: 'daily-sales-by-hour',
+        title: 'Продажи за день по часам',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'not-found-products',
-            title: 'Ненайденные товары',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'manual-barcode-entry-products',
-            title: 'Товары с ручным вводом ШК',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'storno-by-items',
-            title: 'Сторнирование по позициям',
-            icon: <DescriptionIcon />,
-          },
-        ],
+      },
+    ],
+  },
+  {
+    segment: 'load-and-queues-analysis',
+    title: 'Анализ загрузки',
+    icon: <DescriptionIcon />,
+    children: [
+      {
+        segment: 'cash-register-load-by-hour',
+        title: 'Загрузка касс по часам',
+        icon: <DescriptionIcon />,
       },
       {
-        segment: 'sales-methods-and-receipt-work',
-        title: 'Способы продаж',
+        segment: 'checkout-queues',
+        title: 'Очереди на кассах',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'product-adding-methods',
-            title: 'Способы добавления товаров',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'postponed-receipts',
-            title: 'Отложенные чеки',
-            icon: <DescriptionIcon />,
-          },
-        ],
+      },
+    ],
+  },
+  {
+    segment: 'product-losses-and-errors-control',
+    title: 'Потери и контроль ошибок',
+    icon: <DescriptionIcon />,
+    children: [
+      {
+        segment: 'not-found-products',
+        title: 'Ненайденные товары',
+        icon: <DescriptionIcon />,
       },
       {
-        segment: 'marketing-and-loyalty',
-        title: 'Маркетинг и лояльность',
+        segment: 'manual-barcode-entry-products',
+        title: 'Товары с ручным вводом ШК',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'discounts-report',
-            title: 'Отчет по скидкам',
-            icon: <DescriptionIcon />,
-          },
-        ],
+      },
+      {
+        segment: 'storno-by-items',
+        title: 'Сторнирование по позициям',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'sales-methods-and-receipt-work',
+    title: 'Способы продаж',
+    icon: <DescriptionIcon />,
+    children: [
+      {
+        segment: 'product-adding-methods',
+        title: 'Способы добавления товаров',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'postponed-receipts',
+        title: 'Отложенные чеки',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'marketing-and-loyalty',
+    title: 'Маркетинг и лояльность',
+    icon: <DescriptionIcon />,
+    children: [
+      {
+        segment: 'discounts-report',
+        title: 'Отчет по скидкам',
+        icon: <DescriptionIcon />,
       },
     ],
   },
