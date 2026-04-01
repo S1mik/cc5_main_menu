@@ -6,6 +6,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
+import { useActivePage } from '@toolpad/core/useActivePage';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { DemoProvider, useDemoRouter } from '@toolpad/core/internal';
 
@@ -15,75 +16,50 @@ const NAVIGATION: Navigation = [
     title: 'Администрирование торговой сети',
   },
   {
-    segment: 'shops',
-    title: 'Магазины и кассы',
-    icon: <BarChartIcon />,
+    segment: 'network-architecture',
+    title: 'Архитектура сети',
+    icon: <LayersIcon />,
+  },
+  {
+    segment: 'categories',
+    title: 'Категории справочников',
+    icon: <LayersIcon />,
+  },
+  {
+    segment: 'group-operations',
+    title: 'Групповые операции',
+    icon: <LayersIcon />,
     children: [
       {
-        segment: 'network-architecture',
-        title: 'Архитектура сети',
+        segment: 'group-ops-shops',
+        title: 'Магазины',
         icon: <DescriptionIcon />,
       },
       {
-        segment: 'categories',
-        title: 'Категории справочников',
+        segment: 'group-ops-cash-registers',
+        title: 'Кассы',
         icon: <DescriptionIcon />,
       },
       {
-        segment: 'group-operations',
-        title: 'Групповые операции',
+        segment: 'group-ops-virtual-cash',
+        title: 'Виртуальные кассы',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'group-ops-shops',
-            title: 'Магазины',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'group-ops-cash-registers',
-            title: 'Кассы',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'group-ops-virtual-cash',
-            title: 'Виртуальные кассы',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'group-ops-scales',
-            title: 'Весы',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'group-ops-price-checkers',
-            title: 'Прайсчекеры',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'group-ops-price-printers',
-            title: 'Прайспринтеры',
-            icon: <DescriptionIcon />,
-          },
-        ],
       },
       {
-        segment: 'shops-audit',
-        title: 'Аудит',
+        segment: 'group-ops-scales',
+        title: 'Весы',
         icon: <DescriptionIcon />,
-        children: [
-          {
-            segment: 'users-audit-dictionaries',
-            title: 'Аудит пользователей',
-            icon: <DescriptionIcon />,
-          },
-          {
-            segment: 'dictionaries-export-audit',
-            title: 'Аудит выгрузки справочников',
-            icon: <DescriptionIcon />,
-          },
-        ],
       },
-
+      {
+        segment: 'group-ops-price-checkers',
+        title: 'Прайсчекеры',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'group-ops-price-printers',
+        title: 'Прайспринтеры',
+        icon: <DescriptionIcon />,
+      },
     ],
   },
   {
@@ -99,6 +75,23 @@ const NAVIGATION: Navigation = [
       {
         segment: 'configuration-labels',
         title: 'Конфигурационные метки',
+        icon: <DescriptionIcon />,
+      },
+    ],
+  },
+  {
+    segment: 'shops-audit',
+    title: 'Аудит',
+    icon: <DescriptionIcon />,
+    children: [
+      {
+        segment: 'users-audit-dictionaries',
+        title: 'Аудит пользователей',
+        icon: <DescriptionIcon />,
+      },
+      {
+        segment: 'dictionaries-export-audit',
+        title: 'Аудит выгрузки справочников',
         icon: <DescriptionIcon />,
       },
     ],
@@ -340,7 +333,7 @@ const NAVIGATION: Navigation = [
   {
     segment: 'Audit',
     title: 'Аудит',
-    icon: <BarChartIcon />,
+    icon: <DescriptionIcon />,
     children: [
       {
         segment: 'pendig',
@@ -510,6 +503,11 @@ const demoTheme = createTheme({
 });
 
 function DemoPageContent({ pathname }: { pathname: string }) {
+  const activePage = useActivePage();
+  const [missingImages, setMissingImages] = React.useState<Record<string, true>>(
+    {},
+  );
+
   if (pathname === '/') {
     return (
       <Box
@@ -538,6 +536,17 @@ function DemoPageContent({ pathname }: { pathname: string }) {
     );
   }
 
+  const activeSegment =
+    activePage && activePage.path
+      ? activePage.path.split('/').filter(Boolean).slice(-1)[0]
+      : undefined;
+  const hasMissingImage =
+    activeSegment != null ? !!missingImages[activeSegment] : false;
+  const leftMenuImageSrc =
+    activeSegment != null && !hasMissingImage
+      ? `/leftmenu/${activeSegment}.png`
+      : null;
+
   return (
     <Box
       sx={{
@@ -548,7 +557,26 @@ function DemoPageContent({ pathname }: { pathname: string }) {
         textAlign: 'center',
       }}
     >
-      <Typography>Dashboard content for {pathname}</Typography>
+      {leftMenuImageSrc ? (
+        <Box
+          component="img"
+          src={leftMenuImageSrc}
+          alt=""
+          sx={{
+            maxWidth: '100%',
+            height: 'auto',
+            display: 'block',
+          }}
+          onError={() => {
+            if (activeSegment) {
+              setMissingImages((prev) => ({
+                ...prev,
+                [activeSegment]: true,
+              }));
+            }
+          }}
+        />
+      ) : null}
     </Box>
   );
 }
