@@ -1,5 +1,20 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
+import Drawer from '@mui/material/Drawer';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { createTheme } from '@mui/material/styles';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
@@ -8,6 +23,9 @@ import LocalPoliceOutlinedIcon from '@mui/icons-material/LocalPoliceOutlined';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import AppShortcutOutlinedIcon from '@mui/icons-material/AppShortcutOutlined';
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import ViewColumnOutlinedIcon from '@mui/icons-material/ViewColumnOutlined';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import { AppProvider, type Navigation } from '@toolpad/core/AppProvider';
 import { useActivePage } from '@toolpad/core/useActivePage';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
@@ -679,6 +697,143 @@ const demoTheme = createTheme({
   },
 });
 
+type OrdersColumnKey =
+  | 'shop'
+  | 'cashRegister'
+  | 'status'
+  | 'createdAt'
+  | 'amount'
+  | 'cashier';
+
+const ORDERS_COLUMNS: Array<{ key: OrdersColumnKey; label: string }> = [
+  { key: 'shop', label: 'Магазин' },
+  { key: 'cashRegister', label: 'Касса' },
+  { key: 'status', label: 'Статус' },
+  { key: 'createdAt', label: 'Дата создания' },
+  { key: 'amount', label: 'Сумма' },
+  { key: 'cashier', label: 'Кассир' },
+];
+
+function OrdersForm() {
+  const [shopFilter, setShopFilter] = React.useState('');
+  const [isFilterOpen, setIsFilterOpen] = React.useState(false);
+  const [isColumnsOpen, setIsColumnsOpen] = React.useState(false);
+  const [visibleColumns, setVisibleColumns] = React.useState<Record<OrdersColumnKey, boolean>>({
+    shop: true,
+    cashRegister: true,
+    status: true,
+    createdAt: true,
+    amount: true,
+    cashier: true,
+  });
+  const [columnFilters, setColumnFilters] = React.useState<Record<OrdersColumnKey, string>>({
+    shop: '',
+    cashRegister: '',
+    status: '',
+    createdAt: '',
+    amount: '',
+    cashier: '',
+  });
+
+  const activeColumns = ORDERS_COLUMNS.filter((column) => visibleColumns[column.key]);
+
+  return (
+    <Box sx={{ width: '100%', p: 2 }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
+        <Stack spacing={1.5} sx={{ minWidth: 360 }}>
+          <Typography variant="h5" sx={{ fontWeight: 700 }}>
+            Онлайн чеки
+          </Typography>
+          <TextField
+            label="Магазин"
+            size="small"
+            placeholder="Введите значение"
+            value={shopFilter}
+            onChange={(event) => setShopFilter(event.target.value)}
+          />
+        </Stack>
+        <Stack direction="row" spacing={1}>
+          <IconButton title="Фильтрация" onClick={() => setIsFilterOpen(true)}>
+            <FilterAltOutlinedIcon />
+          </IconButton>
+          <IconButton title="Видимые поля" onClick={() => setIsColumnsOpen(true)}>
+            <ViewColumnOutlinedIcon />
+          </IconButton>
+          <IconButton title="Обновить (заглушка)">
+            <RefreshOutlinedIcon />
+          </IconButton>
+        </Stack>
+      </Stack>
+
+      <TableContainer component={Paper} variant="outlined">
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              {activeColumns.map((column) => (
+                <TableCell key={column.key} sx={{ fontWeight: 700 }}>
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={Math.max(activeColumns.length, 1)} sx={{ height: 240, textAlign: 'center' }}>
+                Нет строк для отображения
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Drawer anchor="right" open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
+        <Box sx={{ width: 340, p: 2 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Фильтрация
+          </Typography>
+          <Stack spacing={1.5}>
+            {ORDERS_COLUMNS.map((column) => (
+              <TextField
+                key={column.key}
+                label={column.label}
+                size="small"
+                value={columnFilters[column.key]}
+                onChange={(event) =>
+                  setColumnFilters((prev) => ({ ...prev, [column.key]: event.target.value }))
+                }
+              />
+            ))}
+          </Stack>
+        </Box>
+      </Drawer>
+
+      <Drawer anchor="right" open={isColumnsOpen} onClose={() => setIsColumnsOpen(false)}>
+        <Box sx={{ width: 340, p: 2 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Видимые поля
+          </Typography>
+          <FormGroup>
+            {ORDERS_COLUMNS.map((column) => (
+              <FormControlLabel
+                key={column.key}
+                label={column.label}
+                control={
+                  <Checkbox
+                    checked={visibleColumns[column.key]}
+                    onChange={(event) =>
+                      setVisibleColumns((prev) => ({ ...prev, [column.key]: event.target.checked }))
+                    }
+                  />
+                }
+              />
+            ))}
+          </FormGroup>
+        </Box>
+      </Drawer>
+    </Box>
+  );
+}
+
 function DemoPageContent({ pathname }: { pathname: string }) {
   const activePage = useActivePage();
   const [missingImages, setMissingImages] = React.useState<Record<string, true>>(
@@ -717,6 +872,11 @@ function DemoPageContent({ pathname }: { pathname: string }) {
     activePage && activePage.path
       ? activePage.path.split('/').filter(Boolean).slice(-1)[0]
       : undefined;
+
+  if (activeSegment === 'online-checks') {
+    return <OrdersForm />;
+  }
+
   const hasMissingImage =
     activeSegment != null ? !!missingImages[activeSegment] : false;
   const leftMenuImageSrc =
